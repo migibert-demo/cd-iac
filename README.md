@@ -11,3 +11,11 @@ We have those environments:
 - qa : on this environment, business stakeholders validate the features
 - staging : on this environment, we test our applications behaviour with load test, stress test, security test. It has to look like a production environment.
 - production : do I really need to talk about this ?
+
+Step 1: Create your infrastructure with terraform
+-> Source your creds (sample format in terraform/sample_creds)
+-> Run `terraform apply` (take care about setting router_id and keypair_name variables)
+-> Check that your machines spawned
+
+Step 2: Provision your machines
+-> Run `terraform output output | python gen_inventory.py` from this repository root to generate an ansible inventory file
