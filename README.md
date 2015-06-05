@@ -18,4 +18,6 @@ Step 1: Create your infrastructure with terraform
 -> Check that your machines spawned
 
 Step 2: Provision your machines
--> Run `terraform output output | python gen_inventory.py` from this repository root to generate an ansible inventory file
+-> SSH into your "orchestrator" machine through its floating ip, this is the one we will use to provision the rest of the infrastructure
+-> Go into `/etc/provisioning` and run `terraform output output | python gen_inventory.py` to generate an ansible inventory file
+-> Go into the ansible directory and run `ansible-playbook -i inventory provision_continuous_delivery.yml`

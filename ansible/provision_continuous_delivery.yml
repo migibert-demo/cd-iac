@@ -1,0 +1,10 @@
+- hosts: gocd-master
+  vars:
+    gocd_server:
+      version: "15.1.*"
+      server_max_mem: 4096m
+      server_max_perm_gen: 256m
+      server_mem: 2048m
+      server_min_perm_gen: 128m
+  roles:
+    - voytek.gocd_server
