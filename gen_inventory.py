@@ -10,4 +10,3 @@ def main():
             inventory.write(data)
     
 main()
-        

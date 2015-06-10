@@ -1,10 +1,29 @@
+- hosts: all
+  tasks:
+  - name: Hostname have to be known for gocd-server
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '^127\.0\.0\.1'
+      line: "127.0.0.1 localhost {{ansible_hostname}}"
+    sudo: yes
+
 - hosts: gocd-master
-  vars:
-    gocd_server:
-      version: "15.1.*"
-      server_max_mem: 4096m
-      server_max_perm_gen: 256m
-      server_mem: 2048m
-      server_min_perm_gen: 128m
   roles:
-    - voytek.gocd_server
+  - { role: aalda.gocd, gocd_version: 15.1.0-1863 }
+
+- hosts: gocd-slaves
+  sudo: yes
+  vars:
+    gocd_agent:
+      version: "15.1.0-1863"
+      group: go
+      name: default
+      user: go
+      user_dir: /home/go
+      java_home: /usr/lib/jvm/java-7-openjdk-amd64/jre
+      server: "{{ hostvars[groups['gocd-master'][0]]['ansible_eth0']['ipv4']['address'] }}"
+      port: 8153
+      agent_max_mem: 256m
+      agent_mem: 128m
+  roles:
+  - role: voytek.gocd_agent
