@@ -57,7 +57,7 @@ resource "openstack_compute_instance_v2" "instance-gocd-slave-3" {
 }
 
 output "output" {
-    value = "gocd-master: ${openstack_compute_instance_v2.instance-gocd-master.access_ip_v4}\ngocd-slaves: ${openstack_compute_instance_v2.instance-gocd-slave-1.access_ip_v4},${openstack_compute_instance_v2.instance-gocd-slave-2.access_ip_v4},${openstack_compute_instance_v2.instance-gocd-slave-3.access_ip_v4}"
+    value = "gocd-master: ${openstack_compute_instance_v2.instance-gocd-master.network.0.fixed_ip_v4}\ngocd-slaves: ${openstack_compute_instance_v2.instance-gocd-slave-1.access_ip_v4},${openstack_compute_instance_v2.instance-gocd-slave-2.access_ip_v4},${openstack_compute_instance_v2.instance-gocd-slave-3.access_ip_v4}"
 }
 
 output "orchestrator" {

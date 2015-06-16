@@ -14,10 +14,8 @@ We have those environments:
 
 Step 1: Create your infrastructure with terraform
 -> Source your creds (sample format in terraform/sample_creds)
--> Run `terraform apply` (take care about setting router_id and keypair_name variables)
+-> Run `terraform apply` (take care about setting router_id and keypair_name variables) from terraform directory
 -> Check that your machines spawned
 
 Step 2: Provision your machines
--> SSH into your "orchestrator" machine through its floating ip, this is the one we will use to provision the rest of the infrastructure
--> Go into `/etc/provisioning` and run `terraform output output | python gen_inventory.py` to generate an ansible inventory file
--> Go into the ansible directory and run `ansible-playbook -i inventory provision_continuous_delivery.yml`
+-> From this project's root directory, run provision_orchestrator.sh which take two arguments: your private key and the user with which you will connect orchestration machine via SSH.

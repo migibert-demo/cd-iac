@@ -6,6 +6,9 @@
       regexp: '^127\.0\.0\.1'
       line: "127.0.0.1 localhost {{ansible_hostname}}"
     sudo: yes
+  - name:
+    apt:
+      name: python-httplib2
 
 - hosts: gocd-master
   roles:
@@ -23,7 +26,16 @@
       java_home: /usr/lib/jvm/java-7-openjdk-amd64/jre
       server: "{{ hostvars[groups['gocd-master'][0]]['ansible_eth0']['ipv4']['address'] }}"
       port: 8153
-      agent_max_mem: 256m
-      agent_mem: 128m
+      agent_max_mem: 512m
+      agent_mem: 256m
   roles:
   - role: voytek.gocd_agent
+  tasks:
+  - name: Install build tools
+    apt:
+      name: "{{ item }}"
+    with_items:
+      - build-essential
+      - python-dev
+      - python-virtualenv
+      - maven
