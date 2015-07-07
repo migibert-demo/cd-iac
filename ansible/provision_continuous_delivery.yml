@@ -1,18 +1,23 @@
 - hosts: all
+  sudo: yes
   tasks:
   - name: Hostname have to be known for gocd-server
     lineinfile:
       dest: /etc/hosts
       regexp: '^127\.0\.0\.1'
       line: "127.0.0.1 localhost {{ansible_hostname}}"
-    sudo: yes
-  - name:
-    apt:
-      name: python-httplib2
+  roles:
+    - role: jdauphant.dns
+    dns_nameservers: ['127.0.0.1', '8.8.8.8', '8.8.4.4']
 
 - hosts: gocd-master
   roles:
   - { role: aalda.gocd, gocd_version: 15.1.0-1863 }
+  tasks:
+  - name: Install httplib2
+    apt:
+      name: python-httplib2
+    sudo: yes
 
 - hosts: gocd-slaves
   sudo: yes
