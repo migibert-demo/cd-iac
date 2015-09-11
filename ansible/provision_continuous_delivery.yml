@@ -1,0 +1,46 @@
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Hostname have to be known for gocd-server
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '^127\.0\.0\.1'
+      line: "127.0.0.1 localhost {{ansible_hostname}}"
+  roles:
+    - role: jdauphant.dns
+    dns_nameservers: ['127.0.0.1', '8.8.8.8', '8.8.4.4']
+
+- hosts: gocd-master
+  roles:
+  - { role: aalda.gocd, gocd_version: 15.1.0-1863 }
+  tasks:
+  - name: Install httplib2
+    apt:
+      name: python-httplib2
+    sudo: yes
+
+- hosts: gocd-slaves
+  sudo: yes
+  vars:
+    gocd_agent:
+      version: "15.1.0-1863"
+      group: go
+      name: default
+      user: go
+      user_dir: /home/go
+      java_home: /usr/lib/jvm/java-7-openjdk-amd64/jre
+      server: "{{ hostvars[groups['gocd-master'][0]]['ansible_eth0']['ipv4']['address'] }}"
+      port: 8153
+      agent_max_mem: 512m
+      agent_mem: 256m
+  roles:
+  - role: voytek.gocd_agent
+  tasks:
+  - name: Install build tools
+    apt:
+      name: "{{ item }}"
+    with_items:
+      - build-essential
+      - python-dev
+      - python-virtualenv
+      - maven

@@ -1,0 +1,17 @@
+- hosts: gocd-master
+  tasks:
+  - name: Get agent list
+    uri:
+      url: http://localhost:8153/go/api/agents
+      method: GET
+      return_content: yes
+      status_code: 200
+    register: agent_list
+  - debug: 
+      msg: "{{agent_list}}"
+  - name: Enable agents
+    uri:
+      url: http://localhost:8153/go/api/agents/{{ item['uuid'] }}/enable
+      method: POST
+      status_code: 201
+    with_items: "{{ agent_list.json }}"
